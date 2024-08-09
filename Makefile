@@ -12,7 +12,7 @@ test:
 
 lint:
 	python -m ruff check bt setup.py docs/source/conf.py
-	python -m ruff format --check bt setup.py docs/source/conf.py
+	python -m ruff format -v --check bt setup.py docs/source/conf.py
 
 fix:
 	python -m ruff check --fix bt setup.py docs/source/conf.py
