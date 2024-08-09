@@ -7,9 +7,8 @@ from copy import deepcopy
 import ffn
 import numpy as np
 import pandas as pd
-import pyprind
 from matplotlib import pyplot as plt
-from tqdm import tqdm
+from tqdm.autonotebook import tqdm
 
 import bt
 
@@ -232,19 +231,13 @@ class Backtest(object):
         self.strategy.adjust(self.initial_capital)
 
         # loop through dates
-        # init progress bar
-        if self.progress_bar:
-            bar = pyprind.ProgBar(len(self.dates), title=self.name, stream=1)
 
         # since there is a dummy row at time 0, start backtest at date 1.
         # we must still update for t0
         self.strategy.update(self.dates[0])
 
         # and for the backtest loop, start at date 1
-        for dt in self.dates[1:]:
-            # update progress bar
-            if self.progress_bar:
-                bar.update()
+        for dt in tqdm(self.dates[1:], desc=self.name, disable=(not self.progress_bar)):
 
             # update strategy
             self.strategy.update(dt)
@@ -253,9 +246,6 @@ class Backtest(object):
                 self.strategy.run()
                 # need update after to save weights, values and such
                 self.strategy.update(dt)
-            else:
-                if self.progress_bar:
-                    bar.stop()
 
         self.stats = self.strategy.prices.calc_perf_stats()
         self._original_prices = self.strategy.prices
