@@ -238,7 +238,6 @@ class Backtest(object):
 
         # and for the backtest loop, start at date 1
         for dt in tqdm(self.dates[1:], desc=self.name, disable=not self.progress_bar):
-
             # update strategy
             self.strategy.update(dt)
 
